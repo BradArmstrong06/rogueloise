@@ -4,7 +4,7 @@
     {
         public bool Equals(Vector other)
         {
-            return X == other.X && Y == other.Y;
+            return this == other;
         }
 
         public override bool Equals(object obj)

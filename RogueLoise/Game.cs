@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Threading;
 
@@ -29,7 +30,6 @@ namespace RogueLoise
 
         public Settings Settings;
 
-        private const string SettingsPath = "\\settings.cfg";
 
         public Game()
         {
@@ -40,9 +40,8 @@ namespace RogueLoise
             int fps = 60;
             _frame = 1000.0 / fps;
             _ui = new UI(Settings);
-            _drawer = new ConsolePrinter();
+            _drawer = ServiceLocator.GetService<IDrawer>();
 
-            Run();
         }
 
         public void Run()
@@ -53,54 +52,9 @@ namespace RogueLoise
 
         private void LoadSettings()
         {
-            var settingsPath = Environment.CurrentDirectory + SettingsPath;
-            if (!File.Exists(settingsPath))
-                return; //todo default settings
-
-            List<string> settingLines = new List<string>();
-            using (var reader = new StreamReader(settingsPath))
-            {
-                while (!reader.EndOfStream)
-                {
-                    settingLines.Add(reader.ReadLine());
-                }
-            }
-            foreach (var settingLine in settingLines)
-            {
-                if (settingLine == null)
-                    throw new Exception("WOOTUFUQUE");
-                var line = settingLine.ToLower();
-                var setting = line.Split('=');
-                if (setting.Length != 2)
-                    continue;
-                setting[0] = setting[0].Trim();
-                setting[1] = setting[1].Trim();
-                try
-                {
-                    string[] vector;
-                    switch (setting[0])
-                    {
-                        case "uiborders":
-                            Settings.UITiles = setting[1];
-                            break;
-                        case "uigamezonebegin":
-                            vector = setting[1].Split(',');
-                            Settings.UIWorkzoneBegin = new Vector(int.Parse(vector[0]), int.Parse(vector[1]));
-                            break;
-                        case "uigamezoneend":
-                            vector = setting[1].Split(',');
-                            Settings.UIWorkzoneEnd = new Vector(int.Parse(vector[0]), int.Parse(vector[1]));
-                            break;
-                        default://todo log
-                            break;
-                    }
-                }
-                catch (Exception)
-                {
-                    //todo log?
-                    throw;
-                }
-            }
+            var settingsProvider = ServiceLocator.GetService<SettingsProvider>();
+            settingsProvider.LoadSettings();
+            Settings = settingsProvider.Setting;
         }
 
         private void StartUpdate()
@@ -155,7 +109,6 @@ namespace RogueLoise
 
         private void Draw(DrawArgs args)
         {
-            //Console.Clear();
             _ui.Draw(args);
 
             _drawer.Flush();
@@ -165,7 +118,8 @@ namespace RogueLoise
     public struct Settings
     {
         public string UITiles;
-        public Vector UIWorkzoneBegin;
-        public Vector UIWorkzoneEnd;
+        public Vector UIGamezoneBegin;
+        public Vector UIGamezoneEnd;
+        public Vector DrawzoneEnd;
     }
 }

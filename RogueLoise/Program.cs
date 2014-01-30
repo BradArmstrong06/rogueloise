@@ -1,15 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RogueLoise
 {
     class Program
     {
+        private const string SettingsPath = "\\settings.cfg";
+
         static void Main(string[] args)
         {
-            new Game();
+            RegisterEverything();
+            new Game().Run();
+        }
+
+        private static void RegisterEverything()
+        {
+            var settingsProvider = new SettingsProvider(Environment.CurrentDirectory + SettingsPath);
+            ServiceLocator.AddService<SettingsProvider>(settingsProvider);
+
+            var drawer = new ConsolePrinter();
+            ServiceLocator.AddService<IDrawer>(drawer);
         }
     }
 }

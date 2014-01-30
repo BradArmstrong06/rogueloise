@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 
 namespace RogueLoise
 {
@@ -32,9 +33,8 @@ namespace RogueLoise
             _leftBottomBorder = tiles[4];
             _rightBottomBorder = tiles[5];
 
-            GameZoneBegin = settings.UIWorkzoneBegin;
-            GameZoneEnd = settings.UIWorkzoneEnd;
-
+            GameZoneBegin = settings.UIGamezoneBegin;
+            GameZoneEnd = settings.UIGamezoneEnd;
         }
 
 
