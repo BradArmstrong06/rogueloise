@@ -21,11 +21,6 @@
             }
         }
 
-        //public Vector()
-        //{
-        //    X = 0;
-        //    Y = 0;
-        //}
         public Vector(int x, int y) : this()
         {
             X = x;
@@ -35,18 +30,29 @@
 
         public int Y { get; set; }
 
+
+        #region Operators
+
         public static bool operator ==(Vector a, Vector b)
         {
-            //if (a == null || b == null)
-            //    return false;
             return a.X == b.X && a.Y == b.Y;
         }
 
         public static bool operator !=(Vector a, Vector b)
         {
-            //if (a == null || b == null)
-            //    return true;
             return a.X != b.X || a.Y != b.Y;
         }
+
+        public static Vector operator +(Vector a, Vector b)
+        {
+            return new Vector(a.X + b.X, a.Y + b.Y);
+        }
+
+        public static Vector operator -(Vector a, Vector b)
+        {
+            return new Vector(a.X - b.X, a.Y - b.Y);
+        }
+
+        #endregion
     }
 }

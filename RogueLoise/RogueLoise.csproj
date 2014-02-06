@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsolePrinter.cs" />
+    <Compile Include="Creature.cs" />
+    <Compile Include="CreatureAttributes.cs" />
     <Compile Include="DrawableGameObject.cs" />
     <Compile Include="DrawArgs.cs" />
     <Compile Include="Game.cs" />

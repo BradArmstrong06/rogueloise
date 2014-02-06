@@ -7,7 +7,7 @@ namespace RogueLoise
     {
         public bool IsGlobalMap;
 
-        DrawableGameObject this[int x, int y, int z]
+        GameObject this[int x, int y, int z]
         {
             get
             {
@@ -26,7 +26,7 @@ namespace RogueLoise
             }
         }
 
-        DrawableGameObject this[Vector point, int z]
+        GameObject this[Vector point, int z]
         {
             get
             {
@@ -39,12 +39,12 @@ namespace RogueLoise
             }
         }
 
-        List<DrawableGameObject> this[int x, int y]
+        List<GameObject> this[int x, int y]
         {
             get { return _map[x, y] ?? (_map[x, y] = new List<DrawableGameObject>()); }
         }
 
-        List<DrawableGameObject> this[Vector point]
+        List<GameObject> this[Vector point]
         {
             get
             {
@@ -67,6 +67,13 @@ namespace RogueLoise
         public Map()
         {
             _map = new List<DrawableGameObject>[10,10];
+        }
+
+
+
+        public void MoveObject(GameObject gameObject, Vector point)
+        {
+            
         }
 
     }
