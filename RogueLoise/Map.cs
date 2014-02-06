@@ -39,12 +39,12 @@ namespace RogueLoise
             }
         }
 
-        List<GameObject> this[int x, int y]
+        IList<GameObject> this[int x, int y]
         {
-            get { return _map[x, y] ?? (_map[x, y] = new List<DrawableGameObject>()); }
+            get { return _map[x, y] ?? (_map[x, y] = new List<GameObject>()); }
         }
 
-        List<GameObject> this[Vector point]
+        IList<GameObject> this[Vector point]
         {
             get
             {
@@ -62,11 +62,11 @@ namespace RogueLoise
             return GetPointCount(point.X, point.Y);
         }
 
-        private List<DrawableGameObject>[,] _map;
+        private List<GameObject>[,] _map;
 
         public Map()
         {
-            _map = new List<DrawableGameObject>[10,10];
+            _map = new List<GameObject>[10,10];
         }
 
 
