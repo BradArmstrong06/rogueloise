@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RogueLoise
 {
@@ -68,12 +70,18 @@ namespace RogueLoise
                     if(!toDraw[x,y].HasValue)
                         continue;
 
-                    Console.SetCursorPosition(x,y);
+                    SetPosition(x,y);
                     Console.Write(toDraw[x, y]);
                 }
             }
-            Console.SetCursorPosition(0, YLength);
+            SetPosition(0, YLength);
             _oldPresent = _newPresent;
+        }
+
+        private void SetPosition(int x, int y)
+        {
+            if(Console.CursorLeft != x || Console.CursorTop != y)
+                Console.SetCursorPosition(x, y);
         }
 
         private char?[,] GetChanges()
