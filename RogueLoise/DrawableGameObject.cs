@@ -4,17 +4,25 @@ namespace RogueLoise
 {
     public class DrawableGameObject : GameObject
     {
-        private char[] _tiles = new char[1];
+        public bool IsVisible;
+        public Vector Offset;
         private short _frameIndex;
+        private char[] _tiles = new char[1];
 
-        public DrawableGameObject() :
-            base()
+        public DrawableGameObject(Game game) :
+            base(game)
         {
+            IsVisible = true;
         }
 
         public char Tile
         {
-            get { return IsAnimuted && _tiles.Length > 0 && _frameIndex < _tiles.Length ? _tiles[_frameIndex] : _tiles.Length > 0 ? _tiles[0] : ' '; }
+            get
+            {
+                return IsAnimuted && _tiles.Length > 0 && _frameIndex < _tiles.Length
+                    ? _tiles[_frameIndex]
+                    : _tiles.Length > 0 ? _tiles[0] : ' ';
+            }
             set
             {
                 if (_tiles.Length > 0)
@@ -24,20 +32,15 @@ namespace RogueLoise
             }
         }
 
-        public bool IsVisible;
-
         public char[] Frames
         {
-            get { return _tiles; } 
+            get { return _tiles; }
             set { _tiles = value; }
         }
 
         public Vector VisualPoint
         {
-            get
-            {
-                return new Vector {X = VisualX, Y = VisualY};
-            }
+            get { return new Vector {X = VisualX, Y = VisualY}; }
         }
 
         public int VisualX
@@ -50,25 +53,38 @@ namespace RogueLoise
             get { return Y + Offset.Y; }
         }
 
-        public Vector Offset;
-
         public bool IsAnimuted { get; set; }
 
         public bool IsAnimationStopped { get; set; }
 
         public virtual void Draw(DrawArgs args)
         {
-            if(!IsVisible)
+            if (!IsVisible)
                 return;
 
             if (IsAnimuted)
             {
                 throw new NotImplementedException();
             }
-            else
-            {
-                args.Draw(VisualPoint, Tile);
-            }
+            args.DrawAtAbsolutePoint(VisualPoint, Tile);
+        }
+
+        public override GameObject Clone()
+        {
+            var clone = new DrawableGameObject(Game);
+            SetClone(clone);
+            return clone;
+        }
+
+        protected override void SetClone(GameObject obj)
+        {
+            base.SetClone(obj);
+            var drawable = (DrawableGameObject) obj;
+            drawable.Frames = (char[]) Frames.Clone();
+            drawable.IsAnimationStopped = IsAnimationStopped;
+            drawable.IsAnimuted = IsAnimuted;
+            drawable.IsVisible = IsVisible;
+            drawable.Offset = Offset;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace RogueLoise
         static void Main(string[] args)
         {
             RegisterEverything();
-            new Game().Run();
+            new Game();
         }
 
         private static void RegisterEverything()

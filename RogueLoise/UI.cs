@@ -8,10 +8,10 @@ namespace RogueLoise
         private string _borders;
         private char _sideBorders;
         private char _topBottonBorder;
-        private char _leftTopBorder;
-        private char _leftBottomBorder;
-        private char _rightTopBorder;
-        private char _rightBottomBorder;
+        private char _leftTopCorner;
+        private char _leftBottomCorner;
+        private char _rightTopCorner;
+        private char _rightBottomCorner;
 
 
 
@@ -28,10 +28,10 @@ namespace RogueLoise
 
             _sideBorders = tiles[0];
             _topBottonBorder = tiles[1];
-            _leftTopBorder = tiles[2];
-            _rightTopBorder = tiles[3];
-            _leftBottomBorder = tiles[4];
-            _rightBottomBorder = tiles[5];
+            _leftTopCorner = tiles[2];
+            _rightTopCorner = tiles[3];
+            _leftBottomCorner = tiles[4];
+            _rightBottomCorner = tiles[5];
 
             GameZoneBegin = settings.UIGamezoneBegin;
             GameZoneEnd = settings.UIGamezoneEnd;
@@ -48,37 +48,40 @@ namespace RogueLoise
 
         private void DrawBorders(DrawArgs args)
         {
-            for (int y = GameZoneBegin.Y; y <= GameZoneEnd.Y; y++)
+            var topLeftCorner = GameZoneBegin - new Vector(1, 1);
+            var bottomRightCorner = GameZoneEnd + new Vector(1, 1);
+
+            for (int y = topLeftCorner.Y; y <= bottomRightCorner.Y; y++)
             {
-                if (y == GameZoneBegin.Y || y == GameZoneEnd.Y)
+                if (y == topLeftCorner.Y || y == bottomRightCorner.Y)
                 {
-                    for (int x = GameZoneBegin.X; x <= GameZoneEnd.X; x++)
+                    for (int x = topLeftCorner.X; x <= bottomRightCorner.X; x++)
                     {
                         var point = new Vector(x, y);
 
-                        if (x == GameZoneBegin.X)
+                        if (x == topLeftCorner.X)
                         {
-                            if (y == GameZoneBegin.Y)
-                                args.Draw(point, _leftTopBorder);
-                            if (y == GameZoneEnd.Y)
-                                args.Draw(point, _leftBottomBorder);
+                            if (y == topLeftCorner.Y)
+                                args.DrawAtAbsolutePoint(point, _leftTopCorner);
+                            if (y == bottomRightCorner.Y)
+                                args.DrawAtAbsolutePoint(point, _leftBottomCorner);
                         }
                         else
-                            if (x == GameZoneEnd.X)
+                            if (x == bottomRightCorner.X)
                             {
-                                if (y == GameZoneBegin.Y)
-                                    args.Draw(point, _rightTopBorder);
-                                if (y == GameZoneEnd.Y)
-                                    args.Draw(point, _rightBottomBorder);
+                                if (y == topLeftCorner.Y)
+                                    args.DrawAtAbsolutePoint(point, _rightTopCorner);
+                                if (y == bottomRightCorner.Y)
+                                    args.DrawAtAbsolutePoint(point, _rightBottomCorner);
                             }
                             else
-                                args.Draw(point, _topBottonBorder);
+                                args.DrawAtAbsolutePoint(point, _topBottonBorder);
                     }
                 }
                 else
                 {
-                    args.Draw(GameZoneBegin.X, y, _sideBorders);
-                    args.Draw(GameZoneEnd.X, y, _sideBorders);
+                    args.DrawAtAbsolutePoint(topLeftCorner.X, y, _sideBorders);
+                    args.DrawAtAbsolutePoint(bottomRightCorner.X, y, _sideBorders);
                 }
             }
         }

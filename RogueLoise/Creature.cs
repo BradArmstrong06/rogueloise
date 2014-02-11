@@ -1,14 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RogueLoise
 {
     public class Creature : DrawableGameObject
     {
+        public Creature(Game game) : base(game)
+        {
+        }
+
         public Map Map { get; set; }
 
         public int MaxHp { get; set; }
 
         public int Hp { get; set; }
+
+        public bool Playable { get; set; }
+
+        public bool IsPlayer { get; set; }
 
         public IList<GameObject> Inventory { get; set; }
 
@@ -18,9 +27,27 @@ namespace RogueLoise
 
         public override void Update(UpdateArgs args)
         {
-            base.Update(args);
+            if(Updated)
+                return;
 
             UpdateModificators();
+
+            if (IsPlayer)
+            {
+                if(args.Key == ConsoleKey.LeftArrow)
+                    Move(Direction.Left);
+
+                if (args.Key == ConsoleKey.RightArrow)
+                    Move(Direction.Right);
+
+                if (args.Key == ConsoleKey.UpArrow)
+                    Move(Direction.Up);
+
+                if (args.Key == ConsoleKey.DownArrow)
+                    Move(Direction.Down);
+            }
+
+            base.Update(args);
         }
 
         private void UpdateModificators()
@@ -34,11 +61,14 @@ namespace RogueLoise
 
             if (CanMove(newLocation))
             {
-                Map.MoveObject(this, newLocation);
+                if (Map.MoveObject(this, newLocation))
+                {
+                    Position = newLocation;
+                }
             }
         }
 
-        private bool CanMove(Vector newLocation)
+        protected bool CanMove(Vector newLocation)
         {
             return true;//todo
         }

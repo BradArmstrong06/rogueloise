@@ -6,9 +6,15 @@ namespace RogueLoise
 {
     public interface IDrawer
     {
-        void Draw(int x, int y, char c);
+        void DrawAtAbsolutePoint(int x, int y, char c);
 
-        void Draw(Vector point, char c);
+        void DrawAtAbsolutePoint(Vector point, char c);
+
+        void DrawInGameZone(int x, int y, char c);
+
+        void DrawInGameZone(Vector point, char c);
+
+        void DrawAtAbsolutePoint(int x, int y, string s);
 
         void Flush();
     }
@@ -18,6 +24,8 @@ namespace RogueLoise
         private char[,] _oldPresent;
 
         private char[,] _newPresent;
+
+        private Vector _cameraPositionAtScreen { get; set; }
 
         private int XLength
         {
@@ -48,16 +56,51 @@ namespace RogueLoise
             var settings = _settingsProvider.Setting;
             _oldPresent = new char[settings.DrawzoneEnd.X, settings.DrawzoneEnd.Y];
             _newPresent = new char[settings.DrawzoneEnd.X, settings.DrawzoneEnd.Y];
+
+            var gameZoneCenter = settings.UIGamezoneEnd - settings.UIGamezoneBegin;
+            gameZoneCenter.X /= 2;
+            gameZoneCenter.Y /= 2;
+            _cameraPositionAtScreen = settings.UIGamezoneBegin + gameZoneCenter;
         }
 
-        public void Draw(int x, int y, char c)
+        public void DrawAtAbsolutePoint(int x, int y, char c)
         {
             _newPresent[x, y] = c;
         }
 
-        public void Draw(Vector point, char c)
+        public void DrawAtAbsolutePoint(int x, int y, string s)
         {
-            Draw(point.X, point.Y, c);
+            int i = 0;
+            for (int newX = x; newX < (x + s.Length > XLength ? XLength : x + s.Length); newX++)
+            {
+                _newPresent[newX, y] = s[i];
+                i++;
+            }
+        }
+
+        public void DrawAtAbsolutePoint(Vector point, char c)
+        {
+            DrawAtAbsolutePoint(point.X, point.Y, c);
+        }
+
+        public void DrawInGameZone(int x, int y, char c)
+        {
+            DrawInGameZone(new Vector(x,y), c);
+        }
+        ///<summary>
+        ///</summary>
+        /// <param name="point">Позиция относительно активной камеры</param>
+        /// <param name="c"></param>
+        public void DrawInGameZone(Vector point, char c)
+        {
+            var settings = _settingsProvider.Setting;
+            var absolutePoint = point + _cameraPositionAtScreen;
+
+            //вне пределов зоны отрисовки карты
+            if (absolutePoint.X < settings.UIGamezoneBegin.X || absolutePoint.Y < settings.UIGamezoneBegin.Y ||
+                absolutePoint.X > settings.UIGamezoneEnd.X || absolutePoint.Y > settings.UIGamezoneEnd.Y) 
+                return;
+            DrawAtAbsolutePoint(absolutePoint, c);
         }
 
         public void Flush()
@@ -75,7 +118,8 @@ namespace RogueLoise
                 }
             }
             SetPosition(0, YLength);
-            _oldPresent = _newPresent;
+            _oldPresent = (char[,]) _newPresent.Clone();
+            _newPresent = new char[XLength,YLength];
         }
 
         private void SetPosition(int x, int y)
@@ -92,7 +136,14 @@ namespace RogueLoise
             {
                 for (var y = 0; y < YLength; y++)
                 {
+                    var old = _oldPresent[x, y];
+                    var newc = _newPresent[x, y];
+                    if (_oldPresent[x, y] == _newPresent[x, y])
+                        continue;
+
+                    
                     changes[x, y] = _oldPresent[x, y] != _newPresent[x, y] ? _newPresent[x, y] : (char?) null;
+                    var c = changes[x, y];
                 }
             }
             return changes;

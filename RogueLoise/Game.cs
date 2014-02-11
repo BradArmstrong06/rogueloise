@@ -27,21 +27,54 @@ namespace RogueLoise
 
         private double _frame;
         private double _toDraw;
+        private readonly int _updateRate;
 
+        private Map _currentMap;
         public Settings Settings;
 
+        public readonly ObjectDictionary ObjectsDictionary;
+
+        private DrawableGameObject _player;
+
+        private Vector _acticeCameraPositionAtMap;
 
         public Game()
         {
             LoadSettings();
+
             
-            _updateThread = new Thread(StartUpdate);
-            _drawThread = new Thread(StartDraw);
             int fps = 60;
             _frame = 1000.0 / fps;
+            _updateRate = 200;
             _ui = new UI(Settings);
             _drawer = ServiceLocator.GetService<IDrawer>();
 
+            ObjectsDictionary = new ObjectDictionary();
+
+            var floor = new DrawableGameObject(this) {Tile = '.', Name = "Floor", Key = "floor1"};
+            ObjectsDictionary.Add(floor);
+
+            _currentMap = new Map(this, 50, 50);
+
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    _currentMap.Add(ObjectsDictionary["floor1"], x,y);
+                }
+            }
+            _player = new Creature(this) {X = 2, Y = 2, IsPlayer = true, Tile = '@', Map = _currentMap};
+            _currentMap.Add(_player);
+
+            _updateThread = new Thread(StartUpdate);
+            _drawThread = new Thread(StartDraw);
+
+            Run();
+        }
+
+        private void Initialize()
+        {
+            
         }
 
         public void Run()
@@ -60,13 +93,20 @@ namespace RogueLoise
         private void StartUpdate()
         {
             _updateLastTime = DateTime.Now;
+            var keyCooler = 0.0;
             while (!_exit)
             {
                 _updateElapsedTime = (DateTime.Now - _updateLastTime).TotalMilliseconds;
                 _updateLastTime = DateTime.Now;
                 _updateTime += _updateElapsedTime;
+                
                 if (!_isGamePaused)
+                {
                     _updateGameTime += _updateElapsedTime;
+                    keyCooler += _updateElapsedTime;
+                }
+                var key = Console.ReadKey(true).Key;
+
                 var args = new UpdateArgs
                 {
                     GlobalTime = _updateTime,
@@ -74,6 +114,12 @@ namespace RogueLoise
                     ElapsedTime = _updateElapsedTime,
                     IsGamePaused = _isGamePaused
                 };
+
+                if (keyCooler >= _updateRate)
+                {
+                    keyCooler = 0;
+                    args.Key = key;
+                }
                 Update(args);
             }
         }
@@ -83,13 +129,20 @@ namespace RogueLoise
             _drawLastTime = DateTime.Now;
             while (!_exit)
             {
+                UpdateCamera();
+
                 _drawElapsedTime = (DateTime.Now - _drawLastTime).TotalMilliseconds;
                 _drawLastTime = DateTime.Now;
                 _drawTime += _drawElapsedTime;
                 _toDraw += _drawElapsedTime;
                 if (_toDraw >= _frame)
                 {
-                    var args = new DrawArgs(_drawer) {GlobalTime = _drawTime, ElapsedTime = _toDraw};
+                    var args = new DrawArgs(_drawer)
+                    {
+                        GlobalTime = _drawTime,
+                        ElapsedTime = _toDraw,
+                        CameraPositionAtMap = _acticeCameraPositionAtMap
+                    };
                     Draw(args);
                     _toDraw = 0;
                 }
@@ -100,15 +153,22 @@ namespace RogueLoise
         {
             //todo ui update
 
-            var key = Console.ReadKey(true).Key;
-
-            if (key == ConsoleKey.Escape)
+            if (args.Key == ConsoleKey.Escape)
                 _exit = true;
 
+            _currentMap.Update(args);
+        }
+
+        private void UpdateCamera()
+        {
+            //todo camera movement
+            if(_player != null && _player.IsEnabled)
+            _acticeCameraPositionAtMap = _player.Position;
         }
 
         private void Draw(DrawArgs args)
         {
+            _currentMap.Draw(args);
             _ui.Draw(args);
 
             _drawer.Flush();
