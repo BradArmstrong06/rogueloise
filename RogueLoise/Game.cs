@@ -17,7 +17,6 @@ namespace RogueLoise
 
         public Settings Settings;
 
-        private Vector _acticeCameraPositionAtMap;
         private Map _currentMap;
         private double _drawElapsedTime;
         private DateTime _drawLastTime;
@@ -30,6 +29,8 @@ namespace RogueLoise
         private double _updateGameTime;
         private DateTime _updateLastTime;
         private double _updateTime;
+
+        private GameObject _camera;
 
         public Game()
         {
@@ -65,6 +66,7 @@ namespace RogueLoise
                 }
             }
             _player = new Creature(this) {X = 2, Y = 2, IsPlayer = true, Tile = '@', Map = _currentMap};
+            _camera = _player;
             _currentMap.Add(_player);
         }
 
@@ -133,7 +135,7 @@ namespace RogueLoise
                     {
                         GlobalTime = _drawTime,
                         ElapsedTime = _toDraw,
-                        CameraPositionAtMap = _acticeCameraPositionAtMap
+                        CameraPositionAtMap = _camera.Position
                     };
                     Draw(args);
                     _toDraw = 0;
@@ -154,8 +156,6 @@ namespace RogueLoise
         private void UpdateCamera()
         {
             //todo camera movement
-            if (_player != null && _player.IsEnabled)
-                _acticeCameraPositionAtMap = _player.Position;
         }
 
         private void Draw(DrawArgs args)
