@@ -6,7 +6,8 @@ namespace RogueLoise
     {
         public double GlobalTime;
         public double GameTime;
-        public double ElapsedTime;
+        public double ElapsedGlobalTime;
+        public double ElapsedGameTime;
         public bool IsGamePaused;
         public ConsoleKey Key;
     }
