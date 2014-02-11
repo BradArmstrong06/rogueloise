@@ -11,6 +11,12 @@ namespace RogueLoise
             _objects.Add(obj.Key, obj); //todo exc catch
         }
 
+        public void Add(GameObject obj, string key)
+        {
+            obj.Key = key;
+            _objects.Add(key, obj); //todo exc catch
+        }
+
         public GameObject this[string key]
         {
             get
