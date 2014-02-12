@@ -65,7 +65,7 @@ namespace RogueLoise
                     _currentMap.Add(ObjectsDictionary["floor1"], x, y);
                 }
             }
-            _player = new Creature(this) {X = 2, Y = 2, IsPlayer = true, Tile = '@', Map = _currentMap};
+            _player = new Creature(this) {X = 2, Y = 2, IsPlayer = true, Tile = '@', Map = _currentMap, Color = ConsoleColor.Red};
             _camera = _player;
             _currentMap.Add(_player);
         }

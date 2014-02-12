@@ -1,53 +1,50 @@
 ﻿using System;
-using System.ComponentModel.Design;
 
 namespace RogueLoise
 {
     public class UI
     {
-        private string _borders;
-        private char _sideBorders;
-        private char _topBottonBorder;
-        private char _leftTopCorner;
-        private char _leftBottomCorner;
-        private char _rightTopCorner;
-        private char _rightBottomCorner;
+        private readonly char _leftBottomCorner;
+        private readonly char _leftTopCorner;
+        private readonly char _rightBottomCorner;
+        private readonly char _rightTopCorner;
+        private readonly char _sideBorders;
+        private readonly char _topBottonCorner;
 
-        public Vector WorkZoneEnd;
-        public Vector GameZoneEnd;
-        public Vector GameZoneBegin;
+        private Vector _gameZoneBegin;
+        private Vector _gameZoneEnd;
+        private Vector _workZoneEnd;
 
         public UI(Settings settings)
         {
-            var tiles = settings.UITiles;
-            if(tiles.Length < 6)
+            string tiles = settings.UITiles;
+            if (tiles.Length < 6)
                 throw new Exception(); //todo
 
             _sideBorders = tiles[0];
-            _topBottonBorder = tiles[1];
+            _topBottonCorner = tiles[1];
             _leftTopCorner = tiles[2];
             _rightTopCorner = tiles[3];
             _leftBottomCorner = tiles[4];
             _rightBottomCorner = tiles[5];
 
-            WorkZoneEnd = settings.DrawzoneEnd;
-            GameZoneBegin = settings.UIGamezoneBegin;
-            GameZoneEnd = settings.UIGamezoneEnd;
+            _workZoneEnd = settings.DrawzoneEnd;
+            _gameZoneBegin = settings.UIGamezoneBegin;
+            _gameZoneEnd = settings.UIGamezoneEnd;
         }
-
 
 
         public void Draw(DrawArgs args)
         {
             DrawBorders(args);
-            
+
             //todo draw other
         }
 
         private void DrawBorders(DrawArgs args)
         {
-            var topLeftCorner = GameZoneBegin - new Vector(1, 1);
-            var bottomRightCorner = GameZoneEnd + new Vector(1, 1);
+            Vector topLeftCorner = _gameZoneBegin - new Vector(1, 1);
+            Vector bottomRightCorner = _gameZoneEnd + new Vector(1, 1);
 
             for (int y = topLeftCorner.Y; y <= bottomRightCorner.Y; y++)
             {
@@ -64,16 +61,15 @@ namespace RogueLoise
                             if (y == bottomRightCorner.Y)
                                 args.DrawAtAbsolutePoint(point, _leftBottomCorner);
                         }
+                        else if (x == bottomRightCorner.X)
+                        {
+                            if (y == topLeftCorner.Y)
+                                args.DrawAtAbsolutePoint(point, _rightTopCorner);
+                            if (y == bottomRightCorner.Y)
+                                args.DrawAtAbsolutePoint(point, _rightBottomCorner);
+                        }
                         else
-                            if (x == bottomRightCorner.X)
-                            {
-                                if (y == topLeftCorner.Y)
-                                    args.DrawAtAbsolutePoint(point, _rightTopCorner);
-                                if (y == bottomRightCorner.Y)
-                                    args.DrawAtAbsolutePoint(point, _rightBottomCorner);
-                            }
-                            else
-                                args.DrawAtAbsolutePoint(point, _topBottonBorder);
+                            args.DrawAtAbsolutePoint(point, _topBottonCorner);
                     }
                 }
                 else

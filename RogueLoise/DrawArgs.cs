@@ -1,51 +1,53 @@
-﻿namespace RogueLoise
+﻿using System;
+
+namespace RogueLoise
 {
     public class DrawArgs
     {
-        public double GlobalTime;
-        public double ElapsedTime;
         private readonly IDrawer _drawer;
         public Vector CameraPositionAtMap;
+        public double ElapsedTime;
+        public double GlobalTime;
 
         public DrawArgs(IDrawer drawer)
         {
             _drawer = drawer;
         }
 
-        public void DrawAtAbsolutePoint(int x, int y, char c)
+        public void DrawAtAbsolutePoint(int x, int y, char c, ConsoleColor color = ConsoleColor.White)
         {
-            _drawer.DrawAtAbsolutePoint(x,y,c);
+            _drawer.DrawAtAbsolutePoint(x, y, c, color);
         }
 
-        public void DrawAtAbsolutePoint(Vector point, char c)
+        public void DrawAtAbsolutePoint(Vector point, char c, ConsoleColor color = ConsoleColor.White)
         {
-            _drawer.DrawAtAbsolutePoint(point, c);
+            _drawer.DrawAtAbsolutePoint(point, c, color);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="x">X position at map</param>
         /// <param name="y">Y position at map</param>
         /// <param name="c">Tile</param>
-        public void DrawInGameZone(int x, int y, char c)
+        /// <param name="color"></param>
+        public void DrawInGameZone(int x, int y, char c, ConsoleColor color = ConsoleColor.White)
         {
-            DrawInGameZone(new Vector(x, y), c);
+            DrawInGameZone(new Vector(x, y), c, color);
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="point">Position at map</param>
         /// <param name="c">Tile</param>
-        public void DrawInGameZone(Vector point, char c)
+        /// <param name="color"></param>
+        public void DrawInGameZone(Vector point, char c, ConsoleColor color = ConsoleColor.White)
         {
-            _drawer.DrawInGameZone(point - CameraPositionAtMap, c);
+            _drawer.DrawInGameZone(point - CameraPositionAtMap, c, color);
         }
 
         public void DrawInGameZone(DrawableGameObject obj)
         {
-            DrawInGameZone(obj.Position, obj.Tile);
+            DrawInGameZone(obj.Position, obj.Tile, obj.Color);
         }
     }
 }

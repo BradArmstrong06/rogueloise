@@ -13,7 +13,10 @@ namespace RogueLoise
             base(game)
         {
             IsVisible = true;
+            Color = ConsoleColor.White;
         }
+
+        public ConsoleColor Color { get; set; }
 
         public char Tile
         {
@@ -85,6 +88,7 @@ namespace RogueLoise
             drawable.IsAnimuted = IsAnimuted;
             drawable.IsVisible = IsVisible;
             drawable.Offset = Offset;
+            drawable.Color = Color;
         }
     }
 }
