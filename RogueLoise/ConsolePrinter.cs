@@ -85,8 +85,13 @@ namespace RogueLoise
         private void SetCameraPosition(Vector point)
         {
             var settings = LastSettings;
-            if(point.X < settings.UIGamezoneBegin.X)
+            _cameraPositionAtScreen.X = point.X < settings.UIGamezoneBegin.X
+                ? settings.UIGamezoneBegin.X
+                : point.X > settings.UIGamezoneEnd.X ? settings.UIGamezoneEnd.X : point.X;
 
+            _cameraPositionAtScreen.X = point.X < settings.UIGamezoneBegin.X
+                ? settings.UIGamezoneBegin.X
+                : point.X > settings.UIGamezoneEnd.X ? settings.UIGamezoneEnd.X : point.X;
         }
 
         public void DrawAtAbsolutePoint(int x, int y, char c)
