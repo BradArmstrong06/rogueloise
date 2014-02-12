@@ -13,10 +13,7 @@ namespace RogueLoise
         private char _rightTopCorner;
         private char _rightBottomCorner;
 
-
-
-
-        public Vector WorkZone;
+        public Vector WorkZoneEnd;
         public Vector GameZoneEnd;
         public Vector GameZoneBegin;
 
@@ -33,6 +30,7 @@ namespace RogueLoise
             _leftBottomCorner = tiles[4];
             _rightBottomCorner = tiles[5];
 
+            WorkZoneEnd = settings.DrawzoneEnd;
             GameZoneBegin = settings.UIGamezoneBegin;
             GameZoneEnd = settings.UIGamezoneEnd;
         }
@@ -42,7 +40,7 @@ namespace RogueLoise
         public void Draw(DrawArgs args)
         {
             DrawBorders(args);
-
+            
             //todo draw other
         }
 

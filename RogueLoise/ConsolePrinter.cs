@@ -25,7 +25,15 @@ namespace RogueLoise
 
         private char[,] _newPresent;
 
-        private Vector _cameraPositionAtScreen { get; set; }
+        private Vector _cameraPositionAtScreen;
+
+        private Settings LastSettings
+        {
+            get
+            {
+                return _settingsProvider.Setting;
+            }
+        }
 
         private int XLength
         {
@@ -53,14 +61,32 @@ namespace RogueLoise
 
         public ConsolePrinter()
         {
-            var settings = _settingsProvider.Setting;
+            var settings = LastSettings;
             _oldPresent = new char[settings.DrawzoneEnd.X, settings.DrawzoneEnd.Y];
             _newPresent = new char[settings.DrawzoneEnd.X, settings.DrawzoneEnd.Y];
 
+            SetCameraPosition();
+        }
+
+        private void SetCameraPosition()
+        {
+            var settings = LastSettings;
             var gameZoneCenter = settings.UIGamezoneEnd - settings.UIGamezoneBegin;
             gameZoneCenter.X /= 2;
             gameZoneCenter.Y /= 2;
             _cameraPositionAtScreen = settings.UIGamezoneBegin + gameZoneCenter;
+        }
+
+        private void SetCameraPosition(int x, int y)
+        {
+            SetCameraPosition(new Vector(x, y));
+        }
+
+        private void SetCameraPosition(Vector point)
+        {
+            var settings = LastSettings;
+            if(point.X < settings.UIGamezoneBegin.X)
+
         }
 
         public void DrawAtAbsolutePoint(int x, int y, char c)
