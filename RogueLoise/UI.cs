@@ -9,7 +9,7 @@ namespace RogueLoise
         private readonly char _rightBottomCorner;
         private readonly char _rightTopCorner;
         private readonly char _sideBorders;
-        private readonly char _topBottonCorner;
+        private readonly char _topBottonBorder;
 
         private Vector _gameZoneBegin;
         private Vector _gameZoneEnd;
@@ -18,11 +18,11 @@ namespace RogueLoise
         public UI(Settings settings)
         {
             string tiles = settings.UITiles;
-            if (tiles.Length < 6)
+            if (tiles.Length != 6)
                 throw new Exception(); //todo
 
             _sideBorders = tiles[0];
-            _topBottonCorner = tiles[1];
+            _topBottonBorder = tiles[1];
             _leftTopCorner = tiles[2];
             _rightTopCorner = tiles[3];
             _leftBottomCorner = tiles[4];
@@ -69,7 +69,7 @@ namespace RogueLoise
                                 args.DrawAtAbsolutePoint(point, _rightBottomCorner);
                         }
                         else
-                            args.DrawAtAbsolutePoint(point, _topBottonCorner);
+                            args.DrawAtAbsolutePoint(point, _topBottonBorder);
                     }
                 }
                 else

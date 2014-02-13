@@ -53,7 +53,7 @@ namespace RogueLoise
 
         private void Initialize()
         {
-            var floor = new DrawableGameObject(this) {Tile = '.', Name = "Floor", Key = "floor1"};
+            var floor = new DrawableGameObject(this) {Tile = '.', Name = "Floor", Key = "floor1", Color = ConsoleColor.DarkGreen};
             ObjectsDictionary.Add(floor);
 
             _currentMap = new Map(this, 50, 50);
