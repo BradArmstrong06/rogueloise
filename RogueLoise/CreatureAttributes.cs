@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace RogueLoise
+﻿namespace RogueLoise
 {
     public class CreatureAttribute
     {
@@ -22,7 +17,6 @@ namespace RogueLoise
                 BaseValue = BaseValue
             };
         }
-
     }
 
     public class AttributeModificator

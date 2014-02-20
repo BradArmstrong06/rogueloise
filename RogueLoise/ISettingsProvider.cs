@@ -17,19 +17,13 @@ namespace RogueLoise
 
     public class SettingsProvider : ISettingsProvider<Settings>
     {
-        public Settings Setting { get; private set; }
-        public string SettingsPath { get; set; }
-
         public SettingsProvider(string path)
         {
             LoadSettings(path);
         }
 
-        public void LoadSettings(string path)
-        {
-            SettingsPath = path;
-            LoadSettings();
-        }
+        public Settings Setting { get; private set; }
+        public string SettingsPath { get; set; }
 
         public void LoadSettings()
         {
@@ -46,12 +40,12 @@ namespace RogueLoise
                     settingLines.Add(reader.ReadLine());
                 }
             }
-            foreach (var settingLine in settingLines)
+            foreach (string settingLine in settingLines)
             {
                 if (settingLine == null)
                     throw new Exception("WOOTUFUQUE");
-                var line = settingLine.ToLower();
-                var setting = line.Split('=');
+                string line = settingLine.ToLower();
+                string[] setting = line.Split('=');
                 if (setting.Length != 2)
                     continue;
                 setting[0] = setting[0].Trim();
@@ -77,7 +71,7 @@ namespace RogueLoise
                             vector = setting[1].Split(',');
                             settings.DrawzoneEnd = new Vector(int.Parse(vector[0]), int.Parse(vector[1]));
                             break;
-                        default://todo log
+                        default: //todo log
                             break;
                     }
                 }
@@ -93,6 +87,12 @@ namespace RogueLoise
         public void SaveSettings()
         {
             throw new NotImplementedException();
+        }
+
+        public void LoadSettings(string path)
+        {
+            SettingsPath = path;
+            LoadSettings();
         }
     }
 }

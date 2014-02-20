@@ -16,6 +16,7 @@ namespace RogueLoise
         private readonly Thread _updateThread;
 
         public Settings Settings;
+        private GameObject _camera;
 
         private Map _currentMap;
         private double _drawElapsedTime;
@@ -29,8 +30,6 @@ namespace RogueLoise
         private double _updateGameTime;
         private DateTime _updateLastTime;
         private double _updateTime;
-
-        private GameObject _camera;
 
         public Game()
         {
@@ -53,7 +52,13 @@ namespace RogueLoise
 
         private void Initialize()
         {
-            var floor = new DrawableGameObject(this) {Tile = '.', Name = "Floor", Key = "floor1", Color = ConsoleColor.DarkGreen};
+            var floor = new DrawableGameObject(this)
+            {
+                Tile = '.',
+                Name = "Floor",
+                Key = "floor1",
+                Color = ConsoleColor.DarkGreen
+            };
             ObjectsDictionary.Add(floor);
 
             _currentMap = new Map(this, 50, 50);
@@ -65,7 +70,15 @@ namespace RogueLoise
                     _currentMap.Add(ObjectsDictionary["floor1"], x, y);
                 }
             }
-            _player = new Creature(this) {X = 2, Y = 2, IsPlayer = true, Tile = '@', Map = _currentMap, Color = ConsoleColor.Red};
+            _player = new Creature(this)
+            {
+                X = 2,
+                Y = 2,
+                IsPlayer = true,
+                Tile = '@',
+                Map = _currentMap,
+                Color = ConsoleColor.Red
+            };
             _camera = _player;
             _currentMap.Add(_player);
         }

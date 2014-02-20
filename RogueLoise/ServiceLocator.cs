@@ -5,7 +5,7 @@ namespace RogueLoise
 {
     public static class ServiceLocator
     {
-        private static ServiceContainer _serviceManager = new ServiceContainer();
+        private static readonly ServiceContainer _serviceManager = new ServiceContainer();
 
         public static void AddService(Type type, object service)
         {
@@ -14,12 +14,12 @@ namespace RogueLoise
 
         public static void AddService<T>(object service)
         {
-            _serviceManager.AddService(typeof(T), service);
+            _serviceManager.AddService(typeof (T), service);
         }
 
         public static T GetService<T>()
         {
-            return (T)_serviceManager.GetService(typeof (T));
+            return (T) _serviceManager.GetService(typeof (T));
         }
     }
 }

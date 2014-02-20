@@ -2,11 +2,11 @@
 
 namespace RogueLoise
 {
-    class Program
+    internal class Program
     {
         private const string SettingsPath = "\\settings.cfg";
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             RegisterEverything();
             new Game();

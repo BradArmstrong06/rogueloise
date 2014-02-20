@@ -6,7 +6,19 @@ namespace RogueLoise
 {
     public class Map : DrawableGameObject
     {
+        private readonly List<GameObject>[,] _map;
         public bool IsGlobalMap;
+
+        public Map(Game game) : base(game)
+        {
+            _map = new List<GameObject>[10, 10];
+        }
+
+        public Map(Game game, int x, int y)
+            : base(game)
+        {
+            _map = new List<GameObject>[x, y];
+        }
 
         public GameObject this[int x, int y, int z]
         {
@@ -29,15 +41,9 @@ namespace RogueLoise
 
         public GameObject this[Vector point, int z]
         {
-            get
-            {
-                return this[point.X, point.Y, z];
-            }
+            get { return this[point.X, point.Y, z]; }
 
-            set
-            {
-                this[point.X, point.Y, z] = value;
-            }
+            set { this[point.X, point.Y, z] = value; }
         }
 
         public IList<GameObject> this[int x, int y]
@@ -47,10 +53,7 @@ namespace RogueLoise
 
         public IList<GameObject> this[Vector point]
         {
-            get
-            {
-                return this[point.X, point.Y];
-            }
+            get { return this[point.X, point.Y]; }
         }
 
         public int GetPointCount(int x, int y)
@@ -64,7 +67,7 @@ namespace RogueLoise
         }
 
         /// <summary>
-        /// Добавить объект на карту и поменять его координаты
+        ///     Добавить объект на карту и поменять его координаты
         /// </summary>
         /// <param name="gameObject"></param>
         /// <param name="point"></param>
@@ -73,12 +76,12 @@ namespace RogueLoise
         {
             gameObject.X = x;
             gameObject.Y = y;
-            this[x,y].Add(gameObject);
+            this[x, y].Add(gameObject);
             gameObject.IsEnabled = enableObject;
         }
 
         /// <summary>
-        /// Добавить объект на карту и поменять его координаты
+        ///     Добавить объект на карту и поменять его координаты
         /// </summary>
         /// <param name="gameObject"></param>
         /// <param name="point"></param>
@@ -89,7 +92,7 @@ namespace RogueLoise
         }
 
         /// <summary>
-        /// Добавить объект на координаты, указанные в самом объекте
+        ///     Добавить объект на координаты, указанные в самом объекте
         /// </summary>
         /// <param name="gameObject"></param>
         /// <param name="enableObject"></param>
@@ -98,22 +101,9 @@ namespace RogueLoise
             Add(gameObject, gameObject.Position, enableObject);
         }
 
-        private List<GameObject>[,] _map;
-
-        public Map(Game game) : base (game)
-        {
-            _map = new List<GameObject>[10,10];
-        }
-
-        public Map(Game game, int x, int y)
-            : base(game)
-        {
-            _map = new List<GameObject>[x, y];
-        }
-
         public bool MoveObject(GameObject gameObject, Vector point)
         {
-            if (!CanMoveObject(gameObject, point)) 
+            if (!CanMoveObject(gameObject, point))
                 return false;
 
             this[gameObject.Position].Remove(gameObject);
@@ -145,29 +135,29 @@ namespace RogueLoise
 
         public override void Draw(DrawArgs args)
         {
-            var xLength = _map.GetLength(0);
-            var yLength = _map.GetLength(1);
+            int xLength = _map.GetLength(0);
+            int yLength = _map.GetLength(1);
 
             for (int x = 0; x < xLength; x++)
                 for (int y = 0; y < yLength; y++)
                 {
-                    var drawable = (DrawableGameObject)this[x, y].LastOrDefault(obj => (obj as DrawableGameObject) != null);
-                    if(drawable != null)
+                    var drawable =
+                        (DrawableGameObject) this[x, y].LastOrDefault(obj => (obj as DrawableGameObject) != null);
+                    if (drawable != null)
                         args.DrawInGameZone(drawable);
                 }
         }
 
         private void DoForAll(Action<GameObject> action)
         {
-            var xLength = _map.GetLength(0);
-            var yLength = _map.GetLength(1);
+            int xLength = _map.GetLength(0);
+            int yLength = _map.GetLength(1);
 
             for (int x = 0; x < xLength; x++)
                 for (int y = 0; y < yLength; y++)
                 {
                     this[x, y].ToList().ForEach(action);
                 }
-
         }
 
         private void ResetUpdate(GameObject gameObject)

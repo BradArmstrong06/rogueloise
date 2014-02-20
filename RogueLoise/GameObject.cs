@@ -33,7 +33,7 @@
 
         public virtual void Update(UpdateArgs args)
         {
-            if(Updated)
+            if (Updated)
                 return;
 
             Updated = true;
