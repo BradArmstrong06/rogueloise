@@ -24,6 +24,16 @@ namespace RogueLoise
             _drawer.DrawAtAbsolutePoint(point, c, color);
         }
 
+        public void DrawAtAbsolutePoint(int x, int y, string s, ConsoleColor color = ConsoleColor.White)
+        {
+            _drawer.DrawAtAbsolutePoint(x, y, s, color);
+        }
+
+        public void DrawAtAbsolutePoint(Vector point, string s, ConsoleColor color = ConsoleColor.White)
+        {
+            _drawer.DrawAtAbsolutePoint(point.X, point.Y, s, color);
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="x">X position at map</param>

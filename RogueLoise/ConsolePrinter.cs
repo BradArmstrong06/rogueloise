@@ -54,7 +54,8 @@ namespace RogueLoise
 
         public void DrawAtAbsolutePoint(int x, int y, char c, ConsoleColor color = ConsoleColor.White)
         {
-            _newPresent[x, y] = new ColorCharPair(c, color);
+            if(x >= 0 && x < XLength && y >= 0 && y < YLength)
+                _newPresent[x, y] = new ColorCharPair(c, color);
         }
 
         public void DrawAtAbsolutePoint(int x, int y, string s, ConsoleColor color = ConsoleColor.White)

@@ -33,20 +33,29 @@ namespace RogueLoise
 
             UpdateModificators();
 
-            if (IsPlayer)
+            #region Handling keys
+
+            if (Game.HandlingKeysInGame)
             {
-                if (args.Key == ConsoleKey.LeftArrow)
-                    Move(Direction.Left);
+                if (IsPlayer)
+                {
 
-                if (args.Key == ConsoleKey.RightArrow)
-                    Move(Direction.Right);
+                    if (args.Key == ConsoleKey.LeftArrow)
+                        Move(Direction.Left);
 
-                if (args.Key == ConsoleKey.UpArrow)
-                    Move(Direction.Up);
+                    if (args.Key == ConsoleKey.RightArrow)
+                        Move(Direction.Right);
 
-                if (args.Key == ConsoleKey.DownArrow)
-                    Move(Direction.Down);
+                    if (args.Key == ConsoleKey.UpArrow)
+                        Move(Direction.Up);
+
+                    if (args.Key == ConsoleKey.DownArrow)
+                        Move(Direction.Down);
+                }
             }
+
+            #endregion
+
 
             base.Update(args);
         }

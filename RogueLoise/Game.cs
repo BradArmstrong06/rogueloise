@@ -11,7 +11,7 @@ namespace RogueLoise
 
         private readonly double _frame;
         private readonly double _gameTurnTime;
-        private readonly UI _ui;
+        private readonly UI.UI _ui;
         private readonly int _updateRate;
         private readonly Thread _updateThread;
 
@@ -39,7 +39,7 @@ namespace RogueLoise
             int fps = 60;
             _frame = 1000.0/fps;
             _updateRate = 200;
-            _ui = new UI(Settings);
+            _ui = new UI.UI(this, Settings);
             _drawer = ServiceLocator.GetService<IDrawer>();
             ObjectsDictionary = new ObjectDictionary();
             _updateThread = new Thread(StartUpdate);
@@ -49,6 +49,10 @@ namespace RogueLoise
 
             Run();
         }
+
+        public bool HandlingKeysInGame { get; set; }
+
+        public bool HandlingKeysInUI { get; set; }
 
         private void Initialize()
         {
@@ -70,6 +74,7 @@ namespace RogueLoise
                     _currentMap.Add(ObjectsDictionary["floor1"], x, y);
                 }
             }
+
             _player = new Creature(this)
             {
                 X = 2,
@@ -98,6 +103,7 @@ namespace RogueLoise
 
         private void StartUpdate()
         {
+            HandlingKeysInGame = true;
             _updateLastTime = DateTime.Now;
             double keyCooler = 0.0;
             while (!_exit)
@@ -111,7 +117,10 @@ namespace RogueLoise
                     _updateGameTime += _gameTurnTime;
                     keyCooler += _updateElapsedTime;
                 }
-                ConsoleKey key = Console.ReadKey(true).Key;
+
+                var key = ConsoleKey.NoName;
+                if(HandlingKeysInGame)
+                    key = Console.ReadKey(true).Key;
 
                 var args = new UpdateArgs
                 {
@@ -128,7 +137,15 @@ namespace RogueLoise
                     args.Key = key;
                 }
                 Update(args);
+
+                UpdateHandlingKeys();
             }
+        }
+
+        private void UpdateHandlingKeys()
+        {
+            //reserved for updates without key catching
+            HandlingKeysInGame = true;
         }
 
         private void StartDraw()

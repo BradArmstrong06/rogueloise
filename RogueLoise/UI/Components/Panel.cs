@@ -1,50 +1,42 @@
 ﻿using System;
 
-namespace RogueLoise
+namespace RogueLoise.UI.Components
 {
-    public class UI
+    public class Panel : UIElement
     {
-        private readonly char _leftBottomCorner;
-        private readonly char _leftTopCorner;
-        private readonly char _rightBottomCorner;
-        private readonly char _rightTopCorner;
-        private readonly char _sideBorders;
-        private readonly char _topBottonBorder;
+        private char _leftBottomCorner;
+        private char _leftTopCorner;
+        private char _rightBottomCorner;
+        private char _rightTopCorner;
+        private char _sideBorders;
+        private char _topBottonBorder;
+        private string _borderTiles;
 
-        private Vector _gameZoneBegin;
-        private Vector _gameZoneEnd;
-        private Vector _workZoneEnd;
+        public Panel(Game game) : base(game)
+        {}
 
-        public UI(Settings settings)
+        public string BorderTiles
         {
-            string tiles = settings.UITiles;
-            if (tiles.Length != 6)
-                throw new Exception(); //todo
+            get { return _borderTiles; }
+            set
+            {
+                _borderTiles = value;
+                if (_borderTiles.Length != 6)
+                    throw new Exception(); //todo
 
-            _sideBorders = tiles[0];
-            _topBottonBorder = tiles[1];
-            _leftTopCorner = tiles[2];
-            _rightTopCorner = tiles[3];
-            _leftBottomCorner = tiles[4];
-            _rightBottomCorner = tiles[5];
-
-            _workZoneEnd = settings.DrawzoneEnd;
-            _gameZoneBegin = settings.UIGamezoneBegin;
-            _gameZoneEnd = settings.UIGamezoneEnd;
-        }
-
-
-        public void Draw(DrawArgs args)
-        {
-            DrawBorders(args);
-
-            //todo draw other
+                _sideBorders = _borderTiles[0];
+                _topBottonBorder = _borderTiles[1];
+                _leftTopCorner = _borderTiles[2];
+                _rightTopCorner = _borderTiles[3];
+                _leftBottomCorner = _borderTiles[4];
+                _rightBottomCorner = _borderTiles[5];
+            }
         }
 
         private void DrawBorders(DrawArgs args)
         {
-            Vector topLeftCorner = _gameZoneBegin - new Vector(1, 1);
-            Vector bottomRightCorner = _gameZoneEnd + new Vector(1, 1);
+            Vector topLeftCorner = AbsolutePosition;
+            Vector bottomRightCorner = AbsolutePosition + Size;
 
             for (int y = topLeftCorner.Y; y <= bottomRightCorner.Y; y++)
             {
@@ -78,6 +70,11 @@ namespace RogueLoise
                     args.DrawAtAbsolutePoint(bottomRightCorner.X, y, _sideBorders);
                 }
             }
+        }
+
+        protected override void DoDraw(DrawArgs args)
+        {
+            DrawBorders(args);
         }
     }
 }
