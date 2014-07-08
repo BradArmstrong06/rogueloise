@@ -25,7 +25,7 @@
 
         public string Name { get; set; }
 
-        public Game Game { get; set; }
+        protected readonly Game Game;
 
         public bool IsEnabled { get; set; }
 
@@ -52,6 +52,11 @@
             obj.Key = Key;
             obj.Name = Name;
             obj.IsEnabled = IsEnabled;
+        }
+
+        public void ResetUpdate()
+        {
+            Updated = false;
         }
     }
 }

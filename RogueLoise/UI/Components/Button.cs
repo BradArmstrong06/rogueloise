@@ -12,7 +12,29 @@ namespace RogueLoise.UI.Components
 
         public Vector TextPosition { get; set; }
 
+        public Vector AbsoluteTextPosition
+        {
+            get { return AbsolutePosition + TextPosition; }
+        }
+
+        public ConsoleColor DisabledTextColor { get; set; }
+
         public ConsoleColor TextColor { get; set; }
+
+        public ConsoleColor SelectedTextColor { get; set; }
+
+        public bool DrawBorders
+        {
+            get
+            {
+                return _border.IsDrawBorders;
+            }
+            set
+            {
+                _border.IsDrawBorders = value;
+            }
+        }
+
 
         public Button(Game game, Vector position, Vector size, Action onPressed) : base(game)
         {
@@ -23,18 +45,44 @@ namespace RogueLoise.UI.Components
             {
                 Position = new Vector(),
                 Size = size,
+                BorderTiles = "║═╔╗╚╝"
             };
+            AddChild(_border);
             TextColor = Color;
+            SelectedTextColor = Color;
+            DisabledTextColor = ConsoleColor.Gray;
+            DrawBorders = true;
+            Selectable = true;
         }
 
         public override void Update(UpdateArgs args)
         {
-            base.Update(args);
+            if (IsSelected)
+            {
+                if (args.Key == ConsoleKey.Enter)
+                {
+                    _onPressed();
+                }
+            }
         }
 
         protected override void DoDraw(DrawArgs args)
         {
-            args.DrawAtAbsolutePoint(TextPosition, Text, TextColor);
+            if (!IsEnabled)
+            {
+                args.DrawAtAbsolutePoint(AbsoluteTextPosition, Text, DisabledTextColor);
+            }
+            else
+            {
+                if (IsSelected)
+                {
+                    args.DrawAtAbsolutePoint(AbsoluteTextPosition, Text, SelectedTextColor);
+                }
+                else
+                {
+                    args.DrawAtAbsolutePoint(AbsoluteTextPosition, Text, TextColor);
+                }
+            }
         }
     }
 }

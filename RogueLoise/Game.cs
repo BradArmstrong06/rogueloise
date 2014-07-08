@@ -52,7 +52,17 @@ namespace RogueLoise
 
         public bool HandlingKeysInGame { get; set; }
 
-        public bool HandlingKeysInUI { get; set; }
+        public bool HandlingKeysInUI
+        {
+            get
+            {
+                return _ui.HandlingKeys;
+            }
+            set
+            {
+                _ui.HandlingKeys = value;
+            }
+        }
 
         private void Initialize()
         {

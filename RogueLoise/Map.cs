@@ -162,7 +162,7 @@ namespace RogueLoise
 
         private void ResetUpdate(GameObject gameObject)
         {
-            gameObject.Updated = false;
+            gameObject.ResetUpdate();
         }
     }
 

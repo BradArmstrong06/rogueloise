@@ -12,8 +12,13 @@ namespace RogueLoise.UI.Components
         private char _topBottonBorder;
         private string _borderTiles;
 
+        public bool IsDrawBorders { get; set; }
+
         public Panel(Game game) : base(game)
-        {}
+        {
+            IsDrawBorders = true;
+            Selectable = false;
+        }
 
         public string BorderTiles
         {
@@ -74,7 +79,8 @@ namespace RogueLoise.UI.Components
 
         protected override void DoDraw(DrawArgs args)
         {
-            DrawBorders(args);
+            if (IsDrawBorders)
+                DrawBorders(args);
         }
     }
 }
