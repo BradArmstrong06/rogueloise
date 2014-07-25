@@ -5,6 +5,7 @@
         protected GameObject(Game game)
         {
             Game = game;
+            Z = -1;
         }
 
         public Vector Position { get; set; }
@@ -20,6 +21,8 @@
             get { return Position.Y; }
             set { Position = new Vector(Position.X, value); }
         }
+
+        public int Z { get; set; }
 
         public string Key { get; set; }
 

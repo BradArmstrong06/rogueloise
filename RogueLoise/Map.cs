@@ -9,9 +9,8 @@ namespace RogueLoise
         private readonly List<GameObject>[,] _map;
         public bool IsGlobalMap;
 
-        public Map(Game game) : base(game)
+        public Map(Game game) : this(game, 10, 10)
         {
-            _map = new List<GameObject>[10, 10];
         }
 
         public Map(Game game, int x, int y)
@@ -115,7 +114,6 @@ namespace RogueLoise
         {
             return point.X >= 0 && point.Y >= 0 && point.X < _map.GetLength(0) && point.Y < _map.GetLength(1); //todo
         }
-
 
         public override void Update(UpdateArgs args)
         {

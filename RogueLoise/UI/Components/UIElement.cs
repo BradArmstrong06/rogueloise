@@ -31,24 +31,24 @@ namespace RogueLoise.UI.Components
 
         public int RealSelectIndex { get; set; }
 
-        public int GlobalSelectIndex
-        {
-            get
-            {
-                return Parent == null ? SelectIndex :  Parent.GlobalSelectIndex == -1 ? -1 : Parent.GlobalSelectIndex + SelectIndex;
-            }
-        }
+        //public int GlobalSelectIndex
+        //{
+        //    get
+        //    {
+        //        return Parent == null ? SelectIndex :  Parent.GlobalSelectIndex == -1 ? -1 : Parent.GlobalSelectIndex + SelectIndex;
+        //    }
+        //}
 
-        public int AbsoluteSelectIndex
-        {
-            get
-            {
-                if (Parent == null)
-                    return SelectIndex;
+        //public int AbsoluteSelectIndex
+        //{
+        //    get
+        //    {
+        //        if (Parent == null)
+        //            return SelectIndex;
 
-                return Parent.AbsoluteSelectIndex + SelectIndex;
-            }
-        }
+        //        return Parent.AbsoluteSelectIndex + SelectIndex;
+        //    }
+        //}
 
         public bool IsAnyChildSelected
         {

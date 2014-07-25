@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using RogueLoise.UI.Components;
 
@@ -13,7 +14,7 @@ namespace RogueLoise.UI
         private Vector _workZoneEnd;
         //private Panel _gameZonePanel;
 
-        private List<Panel> _panels = new List<Panel>();
+        private List<UIElement> _panels = new List<UIElement>();
 
         private UIElement _selectedElement;
 
@@ -28,7 +29,7 @@ namespace RogueLoise.UI
             _gameZoneBegin = settings.UIGamezoneBegin;
             _gameZoneEnd = settings.UIGamezoneEnd;
 
-            var gameZonePanel = new Panel(game){BorderTiles = tiles, Position = _gameZoneBegin - 1, Size = _gameZoneEnd - _gameZoneBegin + 2, IsEnabled = false};
+            var gameZonePanel = new Panel(game){BorderTiles = tiles, Position = _gameZoneBegin - 1, Size = _gameZoneEnd - _gameZoneBegin + 2, IsEnabled = false, Selectable = false};
             _panels.Add(gameZonePanel);
             var otherElementsPanel = new Panel(game)
             {
@@ -39,6 +40,8 @@ namespace RogueLoise.UI
             _panels.Add(otherElementsPanel);
             var button = new Button(game, new Vector(2, 2), new Vector(5, 3), () => { }){TextColor = ConsoleColor.DarkRed, SelectedTextColor = ConsoleColor.Red, Text = "HSHSFDH", TextPosition = new Vector(1,1)};
             otherElementsPanel.AddChild(button);
+
+            UpdateElementIndexes();
         }
 
 
@@ -83,6 +86,64 @@ namespace RogueLoise.UI
             }
         }
 
+        private void UpdateElementIndexes()
+        {
+            var currentIndex = 0;
+            UpdateElementIndexes(_panels, ref currentIndex);
+            //UIElement currentElement = null;
+            //foreach (var panel in _panels)
+            //{
+            //    if (panel.SelectIndex < currentSelectIndex)
+            //    {
+            //        currentSelectIndex = panel.SelectIndex;
+            //        currentElement = panel;
+            //    }
+            //}
+            //if (currentElement == null)
+            //    return;
+
+            //if (currentElement.Selectable)
+            //{
+            //    currentElement.RealSelectIndex = currentIndex;
+            //    currentIndex++;
+            //}
+
+            //for (int i = 0; i < _panels.Count; i++)
+            //{
+
+            //}
+        }
+
+        private void UpdateElementIndexes(List<UIElement> elements, ref int currentIndex)
+        {
+            var minSelectIndex = int.MaxValue;
+            var lastSelectIndex = -1;
+            for (int i = 0; i < elements.Count(); i++)
+            {
+                UIElement currentElement = null;
+                foreach (var element in elements)
+                {
+                    if (element.SelectIndex != -1 && element.SelectIndex < minSelectIndex && (lastSelectIndex == -1 || element.SelectIndex > lastSelectIndex))
+                    {
+                        minSelectIndex = element.SelectIndex;
+                        currentElement = element;
+                    }
+                }
+                if (currentElement == null)
+                    return;
+
+                lastSelectIndex = currentElement.SelectIndex;
+
+                if (currentElement.Selectable)
+                {
+                    currentElement.RealSelectIndex = currentIndex;
+                    currentIndex++;
+                }
+
+                UpdateElementIndexes(currentElement.ChildList, ref currentIndex);
+            }
+        }
+
         private UIElement GetNextTarget(int i)
         {
             //var allItems = new List<UIElement>();
@@ -112,6 +173,14 @@ namespace RogueLoise.UI
                 result.AddRange(GetChilds(uiElement));
             }
             return result;
+        }
+
+        private IEnumerable<UIElement> GetChilds(ReadOnlyCollection<UIElement> elements)
+        {
+            if(elements.Any())
+                return new UIElement[0];
+
+            return elements.Select(GetChilds).Aggregate((all, next) => all.Concat(next)).ToArray();
         }
     }
 }

@@ -53,6 +53,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="ISettingsProvider.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Map2.cs" />
     <Compile Include="ObjectDictionary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
